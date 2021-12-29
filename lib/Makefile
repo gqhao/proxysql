@@ -117,7 +117,7 @@ else
 ENABLE_EPOLL=-DENABLE_EPOLL
 endif
 
-MYCFLAGS=$(IDIRS) $(OPTZ) $(DEBUG) -Wall -DGITVERSION=\"$(GIT_VERSION)\" $(NOJEM) $(WGCOV) $(WASAN)
+MYCFLAGS=$(IDIRS) $(OPTZ) $(DEBUG) /usr/local/lib/libsqlparser.so -Wall -DGITVERSION=\"$(GIT_VERSION)\" $(NOJEM) $(WGCOV) $(WASAN)
 MYCXXFLAGS=-std=c++11 $(MYCFLAGS) $(PSQLCH) $(ENABLE_EPOLL)
 
 default: libproxysql.a

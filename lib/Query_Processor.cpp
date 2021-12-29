@@ -1,6 +1,7 @@
 #include <iostream>     // std::cout
 #include <algorithm>    // std::sort
 #include <vector>       // std::vector
+#include <string>        // std::string
 #include "re2/re2.h"
 #include "re2/regexp.h"
 #include "proxysql.h"
@@ -13,6 +14,8 @@
 #include "SpookyV2.h"
 
 #include "pcrecpp.h"
+
+#include "sql-parser/src/util/sql_parser_yd.h"
 
 #ifdef DEBUG
 #define DEB "_DEBUG"
@@ -1797,6 +1800,8 @@ __exit_process_mysql_query:
 	} else {
 		ret->firewall_whitelist_mode = WUS_NOT_FOUND;
 	}
+    //added by gqhao for  yd
+    ret->destination_hostgroup = refresh_destnation_hostgroup_for_replication_lag(query, sess->default_hostgroup);
 	return ret;
 };
 

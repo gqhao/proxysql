@@ -90,7 +90,7 @@ build_deps:
 .PHONY: build_lib
 build_lib: build_deps
 	cd lib && OPTZ="${O2} -ggdb" CC=${CC} CXX=${CXX} ${MAKE}
-
+	cd lib/sql-parser && ${MAKE} install
 .PHONY: build_src
 build_src: build_deps build_lib
 	cd src && OPTZ="${O2} -ggdb" CC=${CC} CXX=${CXX} ${MAKE}
@@ -102,6 +102,7 @@ build_deps_debug:
 .PHONY: build_lib_debug
 build_lib_debug: build_deps_debug
 	cd lib && OPTZ="${O0} -ggdb -DDEBUG" CC=${CC} CXX=${CXX} ${MAKE}
+	cd lib/sql-parser && ${MAKE} install
 
 .PHONY: build_src_testaurora
 build_src_testaurora: build_deps build_lib_testaurora
@@ -175,6 +176,7 @@ build_src_debug_clickhouse: build_deps build_lib_debug_clickhouse
 .PHONY: clean
 clean:
 	cd lib && ${MAKE} clean
+	cd lib/sql-parser && ${MAKE} clean
 	cd src && ${MAKE} clean
 	cd test/tap && ${MAKE} clean
 
@@ -510,6 +512,7 @@ binaries/proxysql_${CURVER}-dbg-debian11_amd64.deb:
 cleanall:
 	cd deps && ${MAKE} cleanall
 	cd lib && ${MAKE} clean
+	cd lib/sql-parser && ${MAKE} clean
 	cd src && ${MAKE} clean
 	cd test/tap && ${MAKE} clean
 	rm binaries/*deb || true
@@ -519,6 +522,7 @@ cleanall:
 cleanbuild:
 	cd deps && ${MAKE} cleanall
 	cd lib && ${MAKE} clean
+	cd lib/sql-parser && ${MAKE} clean
 	cd src && ${MAKE} clean
 
 .PHONY: install

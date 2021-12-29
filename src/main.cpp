@@ -21,6 +21,7 @@
 #include "MySQL_LDAP_Authentication.hpp"
 #include "proxysql_restapi.h"
 #include "Web_Interface.hpp"
+#include "../lib/sql-parser/src/util/yd_spinlock.h"
 
 #include <libdaemon/dfork.h>
 #include <libdaemon/dsignal.h>
@@ -56,7 +57,7 @@ void * __mysql_ldap_auth;
 volatile create_Web_Interface_t * create_Web_Interface = NULL;
 void * __web_interface;
 
-
+extern yd_spinlock_t yd_spinlock;
 extern int ProxySQL_create_or_load_TLS(bool bootstrap, std::string& msg);
 
 char *binary_sha1 = NULL;
@@ -1275,7 +1276,11 @@ namespace {
 }
 
 int main(int argc, const char * argv[]) {
-
+  {
+    int r = yd_create_spinlock(&yd_spinlock);
+    if (r < 0)
+      goto __shutdown;    
+  }
 	{
 		MYSQL *my = mysql_init(NULL);
 		mysql_close(my);
@@ -1577,6 +1582,11 @@ __shutdown:
 	UnloadPlugins();
 
 	ProxySQL_Main_init_phase4___shutdown();
+    //added by gqhao 
+    if (yd_spinlock != NULL)
+    {
+      yd_destroy_spinlock(yd_spinlock);
+    }
 
 	proxy_info("Shutdown completed!\n");
 

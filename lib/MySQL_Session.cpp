@@ -24,6 +24,8 @@
 #include "libinjection.h"
 #include "libinjection_sqli.h"
 
+#include "./sql-parser/src/util/sql_parser_yd.h"
+
 #define SELECT_VERSION_COMMENT "select @@version_comment limit 1"
 #define SELECT_VERSION_COMMENT_LEN 32
 
@@ -4590,7 +4592,10 @@ handler_again:
 							NEXT_IMMEDIATE(SHOW_WARNINGS);
 						}
 					}
-
+                     //added by gqhao for read-write-seperate
+                    std::string sql_query(myds->mysql_real_query.QueryPtr, myds->mysql_real_query.QuerySize);
+                    if (sql_query.length() != 0)
+                      add_table_records(sql_query.c_str());
 					RequestEnd(myds);
 					finishQuery(myds,myconn,prepared_stmt_with_no_params);
 				} else {
